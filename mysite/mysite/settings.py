@@ -22,17 +22,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-jtsdq#-w=)5#p0p5w4)@!!-fj5a@u!08j$zcmrpqmp7wla&39-"
-
+# SECRET_KEY = "django-insecure-jtsdq#-w=)5#p0p5w4)@!!-fj5a@u!08j$zcmrpqmp7wla&39-"
+SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = 'RENDER' not in os.environ
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [] # ACA SE ALMACENA LO QUE ESTA EN LA URL 
 
-
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+# ESTE RENDER ALMACENA LO QUE ENCUENTRE EN LA URL 
+# If the environment variable is set, add it to ALLOWED_HOSTS
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+    
 # Application definition
 
 INSTALLED_APPS = [
+    "homepage.apps.HomepageConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -49,6 +56,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = "mysite.urls"
@@ -78,7 +86,7 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 DATABASES = {
     'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
-        default='postgresql://postgres:postgres@localhost:5432/mysite',
+        default='sqlite:///db.sqlite3',
         conn_max_age=600
     )
 }
@@ -120,8 +128,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 if not DEBUG:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')    
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
