@@ -1,0 +1,317 @@
+Primero Creamos una carpeta llamada DRF_SIMPLE_CRUD
+
+
+Para crear un frontend en Django y Django REST Framework (DRF), puedes seguir estos pasos:
+
+.- creamos un entorno virtual 
+	py -m venv venv 
+
+.- ingresamos a la carpeta, de la siguiente manera:
+    cd venv
+    \venv\cd scripts
+    \venv\Scripts\activate
+     y se vera asi 
+    (venv) C:\wamp64\www\paginas\pagina_modelo\venv\Scripts>
+    salen de la carpeta scripts con cd..
+    salen de la carpeta venv con cd..
+####################################################################################################################################################################
+
+. **Configura tu proyecto Django**:
+    Asegúrate de tener Django y Django REST Framework instalados. Si no lo están, instálalos con:
+
+    pip install django 
+    
+    pip install djangorestframework
+    
+####################################################################################################################################################################
+. **Crea un proyecto Django**:
+    
+    django-admin startproject (nombre del projecto) django_crud 
+    cd django_crud  #ingreso al projecto 
+    
+
+. **Crea una aplicación Django**:
+  
+    python manage.py startapp myapp  #creamos la app
+
+
+. **Configura `INSTALLED_APPS`**:
+    Agrega `myapp` y `rest_framework` en el archivo `settings.py`:
+   
+    INSTALLED_APPS = [
+         ...         
+         'myapp',
+         'rest_framework',
+    ]
+   
+#######################################################################################################################################################################
+.-CREAMOS EL FRONT END
+
+######################################################################################################################################################################
+
+
+----------------- CREANDO PAGINAS EN VIEWS --------------------------------
+
+VAMOS A LA CARPETA VIEWS Y CREAMOS UNA FUNCION PORCADA PAGINA 
+
+def inicio(request):
+    return render(request, 'inicio.html')
+
+def contacto(request):
+    return render(request, 'contacto.html') 
+
+def usuarios(request):
+    return render(request, 'usuarios.html') 
+
+def loguearse(request):
+    return render(request, 'loguearse.html')
+
+def registrarse(request):
+    return render(request, 'registrarse.html')
+
+
+
+######################################################################################################################################################################
+
+----------------- CREANDO PAGINAS EN URL --------------------------------
+
+from django.contrib import admin
+from django.urls import path
+from myapp import views
+
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path('', views.inicio, name='inicio'),
+    path('contacto/', views.contacto, name='contacto'),   
+    path('usuarios/', views.usuarios, name='usuarios'),
+    path('loguearse/', views.loguearse, name='loguearse'),
+    path('registrarse/', views.registrarse, name='registrarse'),     
+]
+######################################################################################################################################################################
+  .-CREAMOS EL FRONT END
+Para crear el FRONT END tenemos que crear una carpeta Templates dentro de la carpeta que tiene apps.py, models.py, url.py
+y dentro de esa carpeta colocamos todas las HTML
+
+<!-- Creamos la Pagina de inicio -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenida</title>
+    
+</head>
+<body>
+    <header>
+        <h1>Bienvenido a Django </h1>
+    </header>
+    <main>
+        <p>Esta es la pagina de inicio de su aplivcacion. ¡Siéntete libre de explorarlo y personalizarlo!</p>
+    </main>
+    <footer>
+        <p>&copy; 2023 MyApp. Todos los registros Reservados.</p>
+    </footer>
+</body>
+</html>
+
+######################################################################################################################################################################
+
+
+<!-- Creamos la Pagina de contacto-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto</title>
+</head>
+<body>
+    <h1>Contacto</h1>
+</body>
+</html>
+
+######################################################################################################################################################################
+
+
+<!-- Creamos la Pagina de usuarios-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuario</title>
+</head>
+<body>
+    <h1>Usuario</h1>
+</body>
+</html>
+
+######################################################################################################################################################################
+
+
+<!-- Creamos la Pagina de loguearse-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loguearse</title>
+</head>
+<body>
+    <h1>Loguearse</h1>
+</body>
+</html>
+
+
+######################################################################################################################################################################
+
+<!-- Creamos la Pagina de Base-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base</title>
+
+</body>
+</html>
+
+
+######################################################################################################################################################################
+
+<!-- Creamos la Pagina de registrarse-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrarse</title>
+</head>
+<body>
+    <h1>Registrarse</h1>
+</body>
+</html>
+
+######################################################################################################################################################################
+VAMOS A CREAR EL MODELO DE BASE DE DATOS
+
+
+DJANGO YA VIENE CON MODULOS QUE NOS PERMITEN ADMINISTRAR ESTA BASE DE DATOS
+DJANGO VIENE CON UN : ORM (OBJECT RELATIONAL MAPPING) SON COMO EL CRUD  
+TAMBIEN PODEMOS INTERACTUAR CREANDO NUESTRA PROPIAS TABLAS EN LA BASE DE DATOS
+
+from django.db import models
+    
+class Project(models.Model):
+    titulo= models.CharField(max_length=50)
+    descripcion = models.TextField(blank=True)
+    tecnologia = models.CharField(max_length=200)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+      
+    def __str__(self):
+        return f"{self.titulo} - {self.descripcion} - {self.tecnologia}"
+
+
+######################################################################################################################################################################
+VAMOS A CREAR EN LA BASE DE DATOS 
+
+DESDE LA CARPETA COLOCAMOS 
+
+	py manage.py makemigrations
+
+
+DESPUES COLOCAMOS 
+
+	py manage.py migrate
+
+
+Ahora vemos como en Migration hay un archivo 0001 que contiene las tablas 
+
+
+
+######################################################################################################################################################################
+
+Ahora creamos un archivo serializers.py
+
+from rest_framework import serializers
+from .models import project
+
+class ProjectSerializer(serializers.ModelSerializer):
+    class meta:
+        model = project
+        fields = ['id', 'titulo', 'description', 'tecnologias', 'fecha_creacion']  
+        read_only_fields = ['fecha_creacion'] # aca creamos que la fecha de creacion no se pueda modificar, eliminar 
+        
+
+#######################################################################################################################################################################
+
+vamos a crear un archivo api.py (dentro de la aplicacion)
+
+from .models import project
+from rest_framework import viewsets, permissions
+from .serializer import ProjectSerializer
+
+class ProjectViewSet(viewsets.ModelViewSet):
+    queryset = project.objects.all().order_by('-fecha_creacion')# consultamos todos los datos de una tabla
+    permission_classes = [permissions.AllowAny]#cualquiera puede hacer una consulta a mi servidor y se podria cambiar por "IsAuthenticated"
+    serializer_class = ProjectSerializer   
+    
+#ya tengo mi API creada 
+#ahora tengo que crear las rutas en mysite/urls.py
+#luego voy a postman y pruebo los endpoints
+#luego voy a admin y creo un superusuario para poder crear proyectos desde el admin
+#luego voy a la pagina de admin y creo proyectos   
+
+
+#######################################################################################################################################################################
+REST FRAMEWORKS ME VA A CREAR LAS URL DE LAS API
+
+dentro de la api creamos una url.py diferente de el projecto 
+
+from rest_framework import routers
+from .api import ProjectViewSet
+
+router = routers.DefaultRouter()
+router.register('api/projects', ProjectViewSet, 'project')    
+
+urlpatterns = router.urls
+# Este archivo define las URLs para la API del proyecto. 
+
+#######################################################################################################################################################################
+
+AHORA DENTRO DEL LA URL DEL PROJECTO CREAMOS EL LLAMADO A LAS URLS
+
+
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("", include("myapp.url")),  # Incluye las urls de myapp  
+]
+
+
+#######################################################################################################################################################################
+										FINAL DE REST 
+#######################################################################################################################################################################
+									VAMOS A DESPLEGAR NUESTRA WEB
+#######################################################################################################################################################################
+
+Vamos a "RENDER:COM"
+
+paso a paso 
+
+es importante que lo subamos a github
+
+ejecutamos en nuestra carpeta "git init"
+
+
+
+
+
