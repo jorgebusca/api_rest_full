@@ -311,6 +311,165 @@ es importante que lo subamos a github
 
 ejecutamos en nuestra carpeta "git init"
 
+creamos un archivo .gitignore
+
+dentro de este archivo colocamos lo que no queremos subir a github
+
+db.sqlite3
+venv
+__pycache__/
+
+
+
+Ahora cramos el commit
+
+git commit -m "primer commit"
+
+COMENCEMOS A PREPARAER TODO PARA RENDERIZAR Y SUBIRLO AL SERVER 
+
+VAMOS A SETTING Y CONFIGURAMOS LO QUE NOS DICE 
+
+https://render.com/docs/deploy-django#creating-a-landing-page
+
+ABRIMOS SETTING 
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+import os
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+DEBUG = 'RENDER' not in os.environ
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+ALLOWED_HOSTS = []
+
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+----------------------------------------------------------------------------------------------------------------------------------
+ pip install dj-database-url psycopg2-binary
+----------------------------------------------------------------------------------------------------------------------------------
+ pip freeze > requirements.txt
+----------------------------------------------------------------------------------------------------------------------------------
+import dj_database_url
+----------------------------------------------------------------------------------------------------------------------------------
+
+DATABASES = {
+    "default": dj_database_url.config(
+        default='sqlite:///db.sqlite3',
+        conn_max_age=600
+        )
+}
+
+vamos a buscar dj-database-url
+----------------------------------------------------------------------------------------------------------------------------------
+
+USAMOS MIGRATE PARA MIGRAR TODO 
+
+python manage.py migrate
+
+pip install whitenoise[brotli]
+
+----------------------------------------------------------------------------------------------------------------------------------------
+AGREGAMOS LA PRIMERA LINEA 
+
+MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware', 
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
+----------------------------------------------------------------------------------------------------------------------------------------
+AGREGAMOS EN STATIC 
+
+
+STATIC_URL = "static/"
+
+if not DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+
+----------------------------------------------------------------------------------------------------------------------------------------
+INSTALAMOS 
+
+pip install whitenoise[brotli]
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+CREAMOS UN SCRIP PARA LA INSTALACION DE TODOS LOS MODULOS 
+
+LLAMADO build.sh 
+
+#!/usr/bin/env bash
+set -o errexit
+
+pip install -r requirements.txt
+
+python manage.py collectstatic --no-input
+
+python manage.py migrate
+
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+AHORA NOS PIDE QUE LO CONVIERTA EN UN ARCHIVO EJECUTABLE
+PERO COMO EN WINDOWS NO PODEMOS REALIZARLO DE MANERASIMPLE 
+USAREMOS EL COMANDO DE GIT 
+EN LA CONSOLA ABRIMOS GIT 
+AHORA SI PODEMOS EJECUTAR EL COMANDO 
+
+
+chmod a+x build.sh
+
+SI AHORA COLOCAMOS LS VEMOS QUE EL ARCHIVO ESTA DE COLOR VERDE 
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+NOSOTROS SABEMOS QUE DJANGO ES CREAR APLICACIONES Y NO SERVIR CONTENIDO
+
+PARA SERVIR CONTENIDO STATICOS UTILIZA MODULS COMO GUNICORN
+
+pip install gunicorn
+
+EJECUTAMOS DE NUEVO EL REQUIREMENTS
+
+pip freeze requirements.txt #para actualizar los requerimientos 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+NECESITAMOS SUBIR TODO A LA CUENTA DE GIT
+
+git add . 
+
+git commit -m "Listo para render"
+
+git push -u origin master
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
 
 
 
